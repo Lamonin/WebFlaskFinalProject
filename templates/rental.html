@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Аренды</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <script src="{{ url_for('static', filename='js/rental.js')}}"></script>
+</head>
+<body>
+<div class="site-body">
+    <header>
+        <a href="{{ url_for("index") }}" class="border_radius_left">Автомобили</a>
+        <a href="#" class="tab-active border_radius_right">Аренды</a>
+    </header>
+
+    <div class="site-content">
+        <div class="site-content-left">
+            <form class="form-body">
+                <details open class="filter-block">
+                    <summary class="filter-header top-filter-header">Статус аренды</summary>
+                    <div class="filter-checkboxes filter-body">
+                        <label class="ui-checkbox"><input type="checkbox" id="car-state" value="0" checked>Активные</label>
+                        <label class="ui-checkbox"><input type="checkbox" id="car-state" value="1" checked>Завершенные</label>
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Период аренды</summary>
+                    <div class="filter-two-inputs filter-body">
+                        <input type="date" id="rent-start" value="2018-01-01" min="2018-01-01" max="2023-12-31">
+                        <input type="date" id="rent-end" value="2023-12-31" min="2018-01-01" max="2023-12-31">
+                    </div>
+                </details>
+                <input type="submit" name="rental-filter" value="Найти" class="filter-submit-button">
+                <input type="submit" name="rental-filter-clear" value="Сбросить фильтры" class="filter-clear-button">
+            </form>
+        </div>
+        <div class="site-content-right">
+            <a href={{ url_for("rental_closing") }}>aboba</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

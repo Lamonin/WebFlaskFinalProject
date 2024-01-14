@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Автомобили</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <script src="{{ url_for('static', filename='js/index.js')}}"></script>
+</head>
+<body>
+<div class="site-body">
+    <header>
+        <a href="#" class="tab-active border_radius_left">Автомобили</a>
+        <a href="{{ url_for("rental") }}" class="border_radius_right">Аренды</a>
+    </header>
+
+    <div class="site-content">
+        <div class="site-content-left">
+            <form class="form-body" action="#" method="POST">
+                <details open class="filter-block">
+                    <summary class="filter-header top-filter-header">Автомобили</summary>
+                    <div class="filter-checkboxes filter-body">
+                        <label class="ui-checkbox"><input type="checkbox" name="car-state[]" value="0" {% if 0 in selected_states %} checked {% endif %}>Свободные</label>
+                        <label class="ui-checkbox"><input type="checkbox" name="car-state[]" value="1" {% if 1 in selected_states %} checked {% endif %}>Арендованные</label>
+                    </div>
+                </details>
+                <details class="filter-block" {% if len(selected_brands) > 0 %} open {% endif %}>
+                    <summary class="filter-header">Марка автомобиля</summary>
+                    <div class="filter-checkboxes filter-body">
+                        <label class="ui-checkbox ui-checkbox-all"><input type="checkbox" id="select_all_model" value="0" {% if len(selected_brands) == len(brands) %} checked {% endif %}>Все</label>
+                        <div class="filter-checkboxes scrollable">
+                            {% for i in range(len(brands)) %}
+                                <label class="ui-checkbox"><input type="checkbox" name="car-brand[]" value="{{ brands.iloc[(i, 0)] }}" {% if brands.iloc[(i, 0)] in selected_brands %} checked {% endif %}>{{ brands.iloc[(i, 1)] }}</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Стоимость (в сутки)</summary>
+                    <div class="filter-two-inputs filter-body">
+                        <input id="cost-min" name="cost-min" type="number" min="0" max="10000" placeholder="от 0" value="{{ cost_min }}">
+                        <input id="cost-max" name="cost-max" type="number" min="0" max="10000" placeholder="до 10000" value="{{ cost_max }}">
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Год выпуска</summary>
+                    <div class="filter-two-inputs filter-body">
+                        <input id="year-min" name="year-min" type="number" min="1996" max="2015" placeholder="от 1996" value="{{ year_min }}">
+                        <input id="year-max" name="year-max" type="number" min="1996" max="2015" placeholder="до 2024" value="{{ year_max }}">
+                    </div>
+                </details>
+                <details class="filter-block" {% if len(selected_colors) > 0 %} open {% endif %}>
+                    <summary class="filter-header">Цвет кузова</summary>
+                    <div class="filter-checkboxes filter-body">
+                        <label class="ui-checkbox ui-checkbox-all"><input type="checkbox" id="select_all_color" {% if len(selected_colors) == len(colors) %} checked {% endif %}>Все</label>
+                        <div class="filter-checkboxes scrollable">
+                            {% for i in range(len(colors)) %}
+                                <label class="ui-checkbox"><input type="checkbox" name="car-color[]" value="{{ colors.iloc[(i, 0)] }}" {% if colors.iloc[(i, 0)] in selected_colors %} checked {% endif %}>{{ colors.iloc[(i, 1)] }}</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </details>
+                <details class="filter-block" {% if grouping!="0" %}open{% endif %}>
+                    <summary class="filter-header">Группировать</summary>
+                    <div class="filter-checkboxes filter-body">
+                        <label class="ui-checkbox"><input type="radio" name="car-grouping" value="0" {% if grouping=="0" %}checked{% endif %}>Нет</label>
+                        <label class="ui-checkbox"><input type="radio" name="car-grouping" value="1" {% if grouping=="1" %}checked{% endif %}>Марка</label>
+                        <label class="ui-checkbox"><input type="radio" name="car-grouping" value="2" {% if grouping=="2" %}checked{% endif %}>Год выпуска</label>
+                    </div>
+                </details>
+                <input type="submit" name="car-filter" value="Найти" class="filter-submit-button">
+                <input type="submit" name="car-filter-clear" value="Сбросить фильтры" class="filter-clear-button">
+            </form>
+        </div>
+        <div class="site-content-right">
+            <a href={{ url_for("rental_conclusion") }}>aboba</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
