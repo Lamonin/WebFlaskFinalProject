@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <script src="{{ url_for('static', filename='js/rental_closing.js')}}"></script>
 </head>
 <body>
 <div class="site-body">
@@ -19,17 +20,81 @@
         <h1>Завершение аренды</h1>
     </div>
 
-    <div class="site-content">
-        <div class="site-content-left">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis cupiditate distinctio dolore dolores eum excepturi fugit hic illo in labore laudantium, nesciunt nisi pariatur quae, quam quod ratione repellendus tenetur!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis cupiditate distinctio dolore dolores eum excepturi fugit hic illo in labore laudantium, nesciunt nisi pariatur quae, quam quod ratione repellendus tenetur!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis cupiditate distinctio dolore dolores eum excepturi fugit hic illo in labore laudantium, nesciunt nisi pariatur quae, quam quod ratione repellendus tenetur!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis cupiditate distinctio dolore dolores eum excepturi fugit hic illo in labore laudantium, nesciunt nisi pariatur quae, quam quod ratione repellendus tenetur!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis cupiditate distinctio dolore dolores eum excepturi fugit hic illo in labore laudantium, nesciunt nisi pariatur quae, quam quod ratione repellendus tenetur!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis cupiditate distinctio dolore dolores eum excepturi fugit hic illo in labore laudantium, nesciunt nisi pariatur quae, quam quod ratione repellendus tenetur!</p>
+    <div class="site-content rental-conclusion-content">
+        <div class="rental-conclusion-driver site-content-block">
+            <p class="text-input-label"><label for="second-name">Фамилия</label></p>
+            <input class="text-input mb-16" type="text" id="second-name" name="second-name" placeholder="Например, Иванов" value="{{ driver_info.second_name[0] }}" disabled>
+            <p class="text-input-label"><label for="name">Имя</label></p>
+            <input class="text-input mb-16" type="text" id="name" name="name" placeholder="Например, Иван" value="{{ driver_info.name[0] }}" disabled>
+            <p class="text-input-label"><label for="patronymic">Отчество (если есть)</label></p>
+            <input class="text-input mb-16" type="text" id="patronymic" name="patronymic" placeholder="Например, Иванович" value="{{ driver_info.patronymic[0] }}" disabled>
+            <p class="text-input-label"><label for="phone-number">Телефон</label></p>
+            <input class="text-input mb-16" type="text" id="phone-number" name="phone-number" placeholder="Например, +7-999-999-99-99" value="{{ driver_info.phone_number[0] }}" disabled>
+            <p class="text-input-label"><label for="driver-license">Номер водительского удостоверения</label></p>
+            <input class="text-input mb-16" type="text" id="driver-license" name="driver-license" maxlength="9" placeholder="Например, AB1234567" value="{{ driver_info.driver_license_number[0] }}" disabled>
+            <p class="text-input-label"><label for="driver-experience">Опыт вождения (лет)</label></p>
+            <input class="text-input mb-16" type="number" id="driver-experience" name="driver-experience" min="0" placeholder="Например, 2" value="{{ driver_info.driver_experience[0] }}" disabled>
         </div>
-        <div class="site-content-right">
-
+        <div class="rental-conclusion-right">
+            <div class="rental-conclusion-car site-content-block">
+                <div class="car-title">{{ car_info.car_name[0] }} {{ car_info.year[0] }} г.</div>
+                <div>Госномер: {{ car_info.license_plate[0] }}</div>
+                <div>Цвет: {{ car_info.color[0] }}</div>
+                <div>Требуемый опыт вождения: {{ car_info.experience[0] }} {{ get_years_declension(car_info.experience[0]) }}</div>
+                <div>
+                    {% if len(car_damage_list) == 0 %}
+                        <p>Повреждения: нет</p>
+                    {% else %}
+                        <p>Повреждения:</p>
+                        <ol class="damage-list">
+                            {%- for i in range(len(car_damage_list)) -%}
+                                <li>{{ car_damage_list.iloc[(i, 0)] }}</li>
+                            {%- endfor -%}
+                        </ol>
+                    {% endif %}
+                </div>
+            </div>
+            <form class="rental-closing site-content-block">
+                <div class="rental-closing-top-left">
+                    <p class="new-damages-title">Новые повреждения: {% if len(new_damages_list) == 0 %} нет {% endif %}</p>
+                    {% for i in range(len(new_damages_list)) %}
+                        <input type="hidden" name="new_damages[]" value="{{ new_damages_list[i] }}">
+                        <div class="rental-closing-new-car-damage">
+                            <p>{{ damage_list.iloc[(new_damages_list[i] - 1, 1)] }} (+{{ damage_list.iloc[(new_damages_list[i] - 1, 2)] }} ₽)</p>
+                            <button type="submit" name="remove_new_damage" value="{{ i }}" class="button-3">Удалить</button>
+                        </div>
+                    {% endfor %}
+                    <div class="new_damage_inputs">
+                        <select id="damage-select" name="new_damage_id" class="select-input">
+                          <option value="-1">Выберите повреждение</option>
+                          {% for i in range(len(damage_list)) %}
+                            <option value="{{ damage_list.iloc[(i, 0)] }}">{{ damage_list.iloc[(i, 1)] }}</option>
+                          {% endfor %}
+                        </select>
+                        <input type="submit" name="new_damage" value="Добавить" class="button-2 wider-button">
+                    </div>
+                </div>
+                <div class="rental-closing-top-right">
+                    {% if fine_days > 0 %}
+                        <p class="fine-cost">Просрочено<br>на {{ fine_days }} {{ get_days_declension(fine_days) }}</p>
+                    {% endif %}
+                    <p class="fine-cost">Штраф: <span class="rental-price">{{ fine_amount }}</span><span class="rental-price"> ₽</span></p>
+                    <p class="total-cost">Итого: <span class="rental-price" id="car-rent-price">{{ total_cost }}</span><span class="rental-price"> ₽</span></p>
+                </div>
+                <div class="rental-closing-bottom-left">
+                    <div class="fg-1">
+                        <p class="text-input-label"><label for="rent-date-start">Начало аренды</label></p>
+                        <input class="text-input" type="date" id="rent-date-start" name="rent-date-start" value="{{ rent_start_date }}" disabled>
+                    </div>
+                    <div class="fg-1">
+                        <p class="text-input-label"><label for="rent-date-end">Конец аренды</label></p>
+                        <input class="text-input" type="date" id="rent-date-end" name="rent-date-end" value="{{ rent_end_date }}" disabled>
+                    </div>
+                </div>
+                <div class="rental-conclusion-bottom-right">
+                    <input type="submit" name="close-a-rent" value="Завершить" class="button-1 wider-button fg-1">
+                </div>
+            </form>
         </div>
     </div>
 </div>

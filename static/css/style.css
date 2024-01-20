@@ -31,10 +31,6 @@ body {
   background-color: gainsboro;
 }
 
-ol, ul {
-  list-style: none;
-}
-
 blockquote, q {
   quotes: none;
 }
@@ -51,7 +47,7 @@ table {
 }
 
 .site-body {
-  max-width: 720px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 0 4px;
 }
@@ -105,8 +101,9 @@ header a:hover {
 
 .site-content {
   display: flex;
+  align-items: flex-start;
   margin-top: 12px;
-  gap: 12px;
+  gap: 18px;
 }
 
 .site-content-left {
@@ -116,14 +113,12 @@ header a:hover {
   box-sizing: border-box;
   border-radius: 8px;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: -400px;
 }
 
 .site-content-right {
   flex-grow: 1;
-  background-color: white;
-  box-sizing: border-box;
-  border-radius: 8px;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 .form-body {
@@ -134,6 +129,12 @@ header a:hover {
 
 .filter-block[open] summary {
   font-weight: bold;
+}
+
+.filter-text-block {
+  margin-top: 6px;
+  padding: 0 12px;
+  margin-bottom: 16px;
 }
 
 .filter-body {
@@ -209,22 +210,88 @@ header a:hover {
   background-color: #4CAF50;
 }
 
+.button-1 {
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+.button-1:hover {
+  background-color: #73ce77;
+}
+.button-1:focus {
+  background-color: #318d35;
+}
+.button-1:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.button-2 {
+  background-color: white;
+  border: 1px solid #4CAF50;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: #4CAF50;
+  font-weight: bold;
+  cursor: pointer;
+}
+.button-2:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+.button-2:focus {
+  background-color: #318d35;
+}
+.button-2:disabled {
+  background-color: gray;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.button-3 {
+  background-color: white;
+  border: 1px solid #ff2a4f;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: #ff2a4f;
+  font-weight: bold;
+  cursor: pointer;
+}
+.button-3:hover {
+  background-color: #ff2a4f;
+  color: white;
+}
+.button-3:focus {
+  background-color: #d21e40;
+}
+.button-3:disabled {
+  background-color: gray;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.wider-button {
+  padding: 8px 12px;
+}
+
 .filter-submit-button {
   background-color: #4CAF50;
   border: none;
   border-radius: 4px;
   padding: 8px 4px;
   margin: 8px 8px;
-  color: white;
-  font-weight: bold;
   font-size: 12px;
   box-sizing: border-box;
-}
-.filter-submit-button:hover {
-  background-color: #73ce77;
-}
-.filter-submit-button:focus {
-  background-color: #318d35;
 }
 
 .filter-clear-button {
@@ -237,6 +304,7 @@ header a:hover {
   font-weight: bold;
   font-size: 12px;
   box-sizing: border-box;
+  cursor: pointer;
 }
 .filter-clear-button:hover {
   background-color: #73ce77;
@@ -244,6 +312,344 @@ header a:hover {
 }
 .filter-clear-button:focus {
   background-color: #318d35;
+}
+
+.car-card-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 12px;
+  margin-bottom: 32px;
+}
+.car-card-container .car-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 8px;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 12px;
+}
+.car-card-container .car-card .car-card-name {
+  font-size: 14px;
+  font-weight: bold;
+  align-self: center;
+  text-align: center;
+}
+.car-card-container .car-card .car-card-bottom {
+  display: flex;
+  justify-content: stretch;
+  flex-wrap: nowrap;
+  margin-top: 4px;
+}
+.car-card-container .car-card .car-card-price {
+  font-size: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  align-self: center;
+}
+.car-card-container .car-card .car-card-rent-end {
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  align-self: center;
+}
+.car-card-container .car-card .car-card-damage-list {
+  overflow: auto;
+  height: 48px;
+  margin-top: -8px;
+  margin-bottom: -8px;
+}
+.car-card-container .car-card .car-card-damage-list li {
+  margin-left: 14px;
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.price-helper {
+  font-weight: normal;
+  font-size: 10px;
+}
+
+.site-content-half {
+  flex-grow: 1;
+}
+
+.site-content-block {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.rental-conclusion-content {
+  align-items: stretch;
+}
+
+.rental-conclusion-driver {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  min-width: 200px;
+  max-width: 200px;
+  flex-grow: 0;
+}
+
+.rental-conclusion-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-grow: 1;
+}
+.rental-conclusion-right .rental-conclusion-car {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+.rental-conclusion-right .rental-conclusion-car .damage-list li {
+  margin-left: 16px;
+}
+
+.rental-conclusion-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
+  height: 30px;
+}
+
+.rental-conclusion-totals {
+  flex-grow: 0;
+  height: 90px;
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  grid-template-rows: 2fr 3fr;
+  grid-template-areas: "top top" "b-left b-right";
+}
+
+.rental-conclusion-top {
+  grid-area: top;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  padding-right: 8px;
+}
+
+.rental-conclusion-bottom-left {
+  grid-area: b-left;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 16px;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-right: 8px;
+}
+
+.rental-conclusion-bottom-right {
+  grid-area: b-right;
+  display: flex;
+  align-items: end;
+  justify-content: stretch;
+  padding-right: 8px;
+  padding-bottom: 8px;
+}
+
+.flash-warning-message {
+  color: #ff2a4f;
+  font-size: 12px;
+  background: #fffbfb;
+  border: 1px solid #ff2a4f;
+  padding: 8px;
+  border-radius: 4px;
+}
+.flash-warning-message + .flash-warning-message {
+  margin-top: 4px;
+}
+
+.rental-price {
+  font-size: 18px;
+}
+
+.text-input-label {
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+
+.text-input {
+  width: 100%;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 10px;
+  transition: border-color 0.2s ease-in-out;
+}
+.text-input::placeholder {
+  color: #212529;
+  opacity: 0.4;
+}
+.text-input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+.select-input {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 10px;
+  transition: border-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.rent-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-row-gap: 16px;
+}
+.rent-container .rent-item {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  min-height: 72px;
+  border-radius: 8px;
+  background: white;
+  padding: 8px;
+  box-sizing: border-box;
+  font-size: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.rent-container .rent-item .highlight-text {
+  border: 1px solid #ccc;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.rent-container .rent-item .rent-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rent-container .rent-item .rent-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rent-container .rent-item .rent-item-right .total-cost {
+  font-size: 16px;
+}
+.rent-container .rent-item .rent-item-right .fine-cost {
+  font-size: 14px;
+  color: #ff2a4f;
+}
+
+.rental-closing {
+  flex-grow: 0;
+  min-height: 90px;
+  display: grid;
+  grid-template-columns: 1fr 150px;
+  grid-template-rows: 1fr 64px;
+  grid-template-areas: "t-left t-right" "b-left b-right";
+}
+.rental-closing .total-cost {
+  margin-top: 8px;
+  font-weight: bold;
+}
+.rental-closing .fine-cost {
+  font-size: 14px;
+  color: #ff2a4f;
+  margin-bottom: 4px;
+}
+.rental-closing .new-damages-title {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.rental-closing .rental-closing-top-left {
+  grid-area: t-left;
+  padding: 8px 8px 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.rental-closing .rental-closing-top-right {
+  grid-area: t-right;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: end;
+  padding: 8px 8px 0;
+  text-align: right;
+}
+.rental-closing .rental-closing-bottom-left {
+  grid-area: b-left;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0 8px 8px;
+  box-sizing: border-box;
+  margin-right: 8px;
+  align-items: end;
+}
+.rental-closing .rental-closing-new-car-damage {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 8px;
+  margin-bottom: 4px;
+}
+.rental-closing .rental-closing-new-car-damage p {
+  font-size: 12px;
+}
+
+.nothing-block {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  background: #ccc;
+  border: 2px solid #bbb;
+  border-radius: 8px;
+  padding: 16px 0;
+  font-size: 24px;
+}
+
+.car-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.car-name-highlight {
+  font-size: 16px;
+}
+
+.car-section {
+  padding: 12px 16px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.fg-1 {
+  flex-grow: 1;
 }
 
 /*# sourceMappingURL=style.css.map */

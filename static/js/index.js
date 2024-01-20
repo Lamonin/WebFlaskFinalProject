@@ -52,6 +52,7 @@ function twoFields(first_field_id, second_field_id) {
         checkBoxAllSelect("select_all_color", "car-color[]");
         twoFields("cost-min", "cost-max");
         twoFields("year-min", "year-max");
+        twoFields("experience-min", "experience-max");
     }
 
 })(window, document, undefined);

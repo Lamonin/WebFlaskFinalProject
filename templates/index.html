@@ -18,12 +18,33 @@
 
     <div class="site-content">
         <div class="site-content-left">
-            <form class="form-body" action="#" method="POST">
+            <form class="form-body" action="#" method="GET">
                 <details open class="filter-block">
                     <summary class="filter-header top-filter-header">Автомобили</summary>
                     <div class="filter-checkboxes filter-body">
                         <label class="ui-checkbox"><input type="checkbox" name="car-state[]" value="0" {% if 0 in selected_states %} checked {% endif %}>Свободные</label>
                         <label class="ui-checkbox"><input type="checkbox" name="car-state[]" value="1" {% if 1 in selected_states %} checked {% endif %}>Арендованные</label>
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Стоимость (в сутки)</summary>
+                    <div class="filter-two-inputs filter-body">
+                        <input id="cost-min" name="cost-min" type="number" min="{{ cost_range.iloc[(0,0)] }}" max="{{ cost_range.iloc[(1,0)] }}" placeholder="от {{ cost_range.iloc[(0,0)] }}" value="{{ cost_min }}">
+                        <input id="cost-max" name="cost-max" type="number" min="{{ cost_range.iloc[(0,0)] }}" max="{{ cost_range.iloc[(1,0)] }}" placeholder="до {{ cost_range.iloc[(1,0)] }}" value="{{ cost_max }}">
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Год выпуска</summary>
+                    <div class="filter-two-inputs filter-body">
+                        <input id="year-min" name="year-min" type="number" min="{{ year_of_manufacture_range.iloc[(0,0)] }}" max="{{ year_of_manufacture_range.iloc[(1,0)] }}" placeholder="от {{ year_of_manufacture_range.iloc[(0,0)] }}" value="{{ year_min }}">
+                        <input id="year-max" name="year-max" type="number" min="{{ year_of_manufacture_range.iloc[(0,0)] }}" max="{{ year_of_manufacture_range.iloc[(1,0)] }}" placeholder="до {{ year_of_manufacture_range.iloc[(1,0)] }}" value="{{ year_max }}">
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Опыт вождения</summary>
+                    <div class="filter-two-inputs filter-body">
+                        <input id="experience-min" name="experience-min" type="number" min="0" max="99" placeholder="от 0" value="{{ experience_min }}">
+                        <input id="experience-max" name="experience-max" type="number" min="0" max="99" placeholder="до 99" value="{{ experience_max }}">
                     </div>
                 </details>
                 <details class="filter-block" {% if len(selected_brands) > 0 %} open {% endif %}>
@@ -32,32 +53,18 @@
                         <label class="ui-checkbox ui-checkbox-all"><input type="checkbox" id="select_all_model" value="0" {% if len(selected_brands) == len(brands) %} checked {% endif %}>Все</label>
                         <div class="filter-checkboxes scrollable">
                             {% for i in range(len(brands)) %}
-                                <label class="ui-checkbox"><input type="checkbox" name="car-brand[]" value="{{ brands.iloc[(i, 0)] }}" {% if brands.iloc[(i, 0)] in selected_brands %} checked {% endif %}>{{ brands.iloc[(i, 1)] }}</label>
+                                <label class="ui-checkbox"><input type="checkbox" name="car-brand[]" value="{{ brands.iloc[(i, 0)] }}" {% if brands.iloc[(i, 0)] in selected_brands %} checked {% endif %}>{{ brands.iloc[(i, 1)] }} {% if brands.car_count[i] > 0 %}({{ brands.car_count[i] }}){% endif %}</label>
                             {% endfor %}
                         </div>
                     </div>
                 </details>
-                <details open class="filter-block">
-                    <summary class="filter-header">Стоимость (в сутки)</summary>
-                    <div class="filter-two-inputs filter-body">
-                        <input id="cost-min" name="cost-min" type="number" min="0" max="10000" placeholder="от 0" value="{{ cost_min }}">
-                        <input id="cost-max" name="cost-max" type="number" min="0" max="10000" placeholder="до 10000" value="{{ cost_max }}">
-                    </div>
-                </details>
-                <details open class="filter-block">
-                    <summary class="filter-header">Год выпуска</summary>
-                    <div class="filter-two-inputs filter-body">
-                        <input id="year-min" name="year-min" type="number" min="1996" max="2015" placeholder="от 1996" value="{{ year_min }}">
-                        <input id="year-max" name="year-max" type="number" min="1996" max="2015" placeholder="до 2024" value="{{ year_max }}">
-                    </div>
-                </details>
                 <details class="filter-block" {% if len(selected_colors) > 0 %} open {% endif %}>
-                    <summary class="filter-header">Цвет кузова</summary>
+                    <summary class="filter-header">Цвет</summary>
                     <div class="filter-checkboxes filter-body">
                         <label class="ui-checkbox ui-checkbox-all"><input type="checkbox" id="select_all_color" {% if len(selected_colors) == len(colors) %} checked {% endif %}>Все</label>
                         <div class="filter-checkboxes scrollable">
                             {% for i in range(len(colors)) %}
-                                <label class="ui-checkbox"><input type="checkbox" name="car-color[]" value="{{ colors.iloc[(i, 0)] }}" {% if colors.iloc[(i, 0)] in selected_colors %} checked {% endif %}>{{ colors.iloc[(i, 1)] }}</label>
+                                <label class="ui-checkbox"><input type="checkbox" name="car-color[]" value="{{ colors.iloc[(i, 0)] }}" {% if colors.iloc[(i, 0)] in selected_colors %} checked {% endif %}>{{ colors.iloc[(i, 1)] }} {% if colors.car_count[i] > 0 %}({{ colors.car_count[i] }}){% endif %}</label>
                             {% endfor %}
                         </div>
                     </div>
@@ -70,12 +77,74 @@
                         <label class="ui-checkbox"><input type="radio" name="car-grouping" value="2" {% if grouping=="2" %}checked{% endif %}>Год выпуска</label>
                     </div>
                 </details>
-                <input type="submit" name="car-filter" value="Найти" class="filter-submit-button">
+                <input type="submit" name="car-filter" value="Найти" class="button-1 filter-submit-button">
                 <input type="submit" name="car-filter-clear" value="Сбросить фильтры" class="filter-clear-button">
             </form>
         </div>
         <div class="site-content-right">
-            <a href={{ url_for("rental_conclusion") }}>aboba</a>
+            {% if len(cars) == 0 %}
+                <div class="nothing-block">
+                    <p>Ничего нет</p>
+                </div>
+            {% endif %}
+
+            {% set vars = {'group_name': "", 'group_index': 0} %}
+            {% if grouping == "1" %}
+                {% if vars.update({'group_index': 1}) %} {% endif %}
+            {% elif grouping == "2" %}
+                {% if vars.update({'group_index': 4}) %} {% endif %}
+            {% endif %}
+
+            {% if vars.group_index == 0 %} <div class="car-card-container"> {% endif %}
+
+            {% for i in range(len(cars)) %}
+                {% if vars.group_index != 0 and vars.group_name != cars.iloc[(i, vars.group_index)] %}
+                    {% if vars.update({'group_name': cars.iloc[(i, vars.group_index)]}) %} {% endif %}
+                    {% if i > 0 %}
+                        </div>
+                    {% endif %}
+                    <div class="car-section">{{ cars.iloc[(i, vars.group_index)] }}</div>
+                    <div class="car-card-container">
+                {% endif %}
+                {% if 0 in selected_states and cars.iloc[(i, 0)] not in rent_cars.car_id.values or 1 in selected_states and cars.iloc[(i, 0)] in rent_cars.car_id.values %}
+                <div class="car-card">
+                    <div class="car-card-name">{{ cars.iloc[(i, 1)] }} {{ cars.iloc[(i, 2)] }} {{ cars.iloc[(i, 4)] }} г.</div>
+                    <div class="car-card-year">{{ cars.iloc[(i, 5)] }}</div>
+                    <div class="car-card-year">Цвет: {{ cars.iloc[(i, 3)] }}</div>
+                    <div class="car-card-year">Опыт вождения: {{ cars.experience_requirement[i] }} {{ get_years_declension(cars.experience_requirement[i]) }}</div>
+                    <p>Повреждения: {% if len(cars_damage_list[i]) ==0 %} нет {% endif %}</p>
+                    <div class="car-card-damage-list">
+                        {% if len(cars_damage_list[i]) > 0 %}
+                        <ol>
+                            {% for j in range(len(cars_damage_list[i])) %}
+                                <li>{{ cars_damage_list[i].iloc[(j, 0)] }}</li>
+                            {% endfor %}
+                        </ol>
+                        {% endif %}
+                    </div>
+                    <div class="fg-1"></div>
+                    <div class="car-card-price">
+                        {{ cars.iloc[(i, 6)] }} ₽<span class="price-helper">/сутки</span>
+                    </div>
+                    {% if cars.iloc[(i, 0)] in rent_cars.car_id.values %}
+                        <div class="car-card-rent-end">аренда до {{ cars.rental_end_date[i] }}</div>
+                    {% endif %}
+                    {% if cars.iloc[(i, 0)] in rent_cars.car_id.values %}
+                        <form action="{{ url_for("rental") }}" method="GET" class="car-card-bottom">
+                            <input type="hidden" name="auto-number-plate" value="{{ cars.iloc[(i, 5)] }}" />
+                            <input type="submit" class="button-3 wider-button fg-1" name="car-rent" value="Арендовано"/>
+                        </form>
+                    {% else %}
+                        <form action="#" method="POST" class="car-card-bottom">
+                            <input type="hidden" name="car-id" value="{{ cars.iloc[(i, 0)] }}" />
+                            <input type="submit" class="button-1 wider-button fg-1" name="car-rent" value="Арендовать"/>
+                        </form>
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if vars.group_index == 0 %} </div> {% endif %}
         </div>
     </div>
 </div>

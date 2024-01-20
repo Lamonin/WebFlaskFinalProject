@@ -22,23 +22,73 @@
                 <details open class="filter-block">
                     <summary class="filter-header top-filter-header">Статус аренды</summary>
                     <div class="filter-checkboxes filter-body">
-                        <label class="ui-checkbox"><input type="checkbox" id="car-state" value="0" checked>Активные</label>
-                        <label class="ui-checkbox"><input type="checkbox" id="car-state" value="1" checked>Завершенные</label>
+                        <label class="ui-checkbox"><input type="checkbox" name="rental_state[]" value="0" {% if 0 in selected_states %}checked{% endif %}>Активные</label>
+                        <label class="ui-checkbox"><input type="checkbox" name="rental_state[]" value="1" {% if 1 in selected_states %}checked{% endif %}>Завершенные</label>
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Клиент</summary>
+                    <div class="filter-text-block">
+                        <input class="text-input" type="text" name="client-name" list="client-names" value="{{ client_name }}" placeholder="Например, Иванов Иван Иванович">
+                        <datalist id="client-names">
+                            {% for i in range(len(clients)) %}
+                                <option value="{{ clients.full_name[i] }}">({{ clients.license_number[i] }})</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </details>
+                <details open class="filter-block">
+                    <summary class="filter-header">Автомобиль</summary>
+                    <div class="filter-text-block">
+                        <input class="text-input" type="text" name="auto-number-plate" value="{{ auto_number_plate }}" placeholder="Номер автомобиля">
                     </div>
                 </details>
                 <details open class="filter-block">
                     <summary class="filter-header">Период аренды</summary>
                     <div class="filter-two-inputs filter-body">
-                        <input type="date" id="rent-start" value="2018-01-01" min="2018-01-01" max="2023-12-31">
-                        <input type="date" id="rent-end" value="2023-12-31" min="2018-01-01" max="2023-12-31">
+                        <input type="date" name="rental-start-date" value="{{ rental_start_date }}" min="{{ rental_min_date }}" max="{{ rental_max_date }}">
+                        <input type="date" name="rental-end-date" value="{{ rental_end_date }}" min="{{ rental_min_date }}" max="{{ rental_max_date }}">
                     </div>
                 </details>
-                <input type="submit" name="rental-filter" value="Найти" class="filter-submit-button">
+                <input type="submit" name="rental-filter" value="Найти" class="button-1 filter-submit-button">
                 <input type="submit" name="rental-filter-clear" value="Сбросить фильтры" class="filter-clear-button">
             </form>
         </div>
         <div class="site-content-right">
-            <a href={{ url_for("rental_closing") }}>aboba</a>
+            {% if len(rents) == 0 %}
+                <div class="nothing-block">
+                    <p>Ничего нет</p>
+                </div>
+            {% endif %}
+            <div class="rent-container">
+
+                {% for i in range(len(rents)) %}
+                    <div class="rent-item">
+                        <div class="rent-item-left">
+                            <p><span class="car-name-highlight">{{ rents.car_name[i] }}</span> <span class="highlight-text">{{ rents.license_plate[i] }}</span></p>
+                            <p>Водитель: <span class="highlight-text">{{ rents.driver_name[i] }}</span></p>
+                            <div class="fg-1"></div>
+                            <p class="rent-period">Аренда с <span class="highlight-text">{{ rents.rental_start_date[i] }}</span> по <span class="highlight-text">{{ rents.rental_end_date[i] }}</span></p>
+                        </div>
+                        <div class="rent-item-right">
+                            <p class="total-cost">Итого: {{ rents.total_cost[i] }} ₽</p>
+                            {% if rents.state[i] != 0 %}
+                                <p class="fine-cost">Штраф: {{ int(rents.fine_amount[i]) }} ₽</p>
+                            {% elif rents.days_overdue[i] > 0 %}
+                                <p class="fine-cost">Дней просрочено: {{ int(rents.days_overdue[i]) }}</p>
+                            {% endif %}
+                            <form>
+                                <input type="hidden" name="rental-contract-id" value="{{ rents.rental_contract_id[i] }}">
+                                {% if rents.state[i] == 0 %}
+                                    <input type="submit" name="end-rental" value="Завершить аренду" class="button-1 wider-button">
+                                {% else %}
+                                    <input type="submit" value="Завершено" class="button-1 wider-button" disabled>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
